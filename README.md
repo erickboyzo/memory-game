@@ -7,6 +7,7 @@ A classic memory card matching game built with SvelteKit and modern web technolo
 **Objective:** Match all pairs of cards in the fewest moves possible.
 
 **How to Play:**
+
 1. Choose your game settings:
    - **Theme**: Numbers or Icons
    - **Players**: 1-4 players
@@ -19,6 +20,7 @@ A classic memory card matching game built with SvelteKit and modern web technolo
 7. The player with the most matches wins (multiplayer)
 
 **Scoring:**
+
 - Single Player: Complete the game in the fewest moves
 - Multiplayer: Player with the most pairs wins
 
