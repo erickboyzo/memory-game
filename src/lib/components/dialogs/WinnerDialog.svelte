@@ -40,7 +40,7 @@
 		{/if}
 
 		<div class="flex flex-col gap-4">
-			<p class="text-center font-semibold text-gray-500">Game over here are the results.</p>
+			<p class="text-center text-lg font-semibold text-gray-600">Game over here are the results.</p>
 
 			<div class="flex flex-col gap-4">
 				{#each result.players as player (player.name)}
