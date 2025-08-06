@@ -32,7 +32,7 @@
 	transition:fade={{ duration: 200 }}
 >
 	<div
-		class="flex flex-col gap-6 rounded-2xl bg-white p-8 shadow-lg md:min-w-2xl"
+		class="flex flex-col gap-6 rounded-2xl bg-white p-8 shadow-lg min-w-[90vw] md:min-w-2xl"
 		transition:scale={{ duration: 200, easing: quintOut }}
 	>
 		{#if result.winningPlayer.name}
@@ -40,17 +40,21 @@
 		{/if}
 
 		<div class="flex flex-col gap-4">
-			<p class="text-center font-semibold text-gray-400">Game over here are the results.</p>
+			<p class="text-center font-semibold text-gray-500">Game over here are the results.</p>
 
-			<div class="grid grid-cols-12 gap-4 text-center">
-				<!--				<div class="rounded-lg bg-gray-100 p-4">-->
-				<!--					<p class="text-sm text-gray-500">Time</p>-->
-				<!--					<p class="text-xl font-bold text-gray-700">{formattedTime}</p>-->
-				<!--				</div>-->
-				<!--				<div class="rounded-lg bg-gray-100 p-4">-->
-				<!--					<p class="text-sm text-gray-500">Moves</p>-->
-				<!--					<p class="text-xl font-bold text-gray-700">{result.winningPlayer.score}</p>-->
-				<!--				</div>-->
+			<div class="flex flex-col gap-4">
+				{#each result.players as player (player.name)}
+					<div class={`
+        flex flex-row rounded-lg w-full bg-gray-100 p-4 justify-between
+        ${player.name === result.winningPlayer.name ? 'bg-gray-800 text-white' : 'text-gray-700'
+        }
+    `}>
+
+						<div
+							class="text-lg md:text-2xl">{player.name} {player.name === result.winningPlayer.name ? '(Winner) 🏆' : ''}</div>
+						<div class=" text-xl md:text-3xl font-bold">{player.score} pairs</div>
+					</div>
+				{/each}
 			</div>
 		</div>
 
@@ -62,31 +66,31 @@
 </dialog>
 
 <style lang="postcss">
-	dialog {
-		position: fixed;
-		border: none;
-		padding: 0;
-		margin: auto;
-		background: transparent;
-	}
+    dialog {
+        position: fixed;
+        border: none;
+        padding: 0;
+        margin: auto;
+        background: transparent;
+    }
 
-	dialog::backdrop {
-		position: fixed;
-		inset: 0;
-	}
+    dialog::backdrop {
+        position: fixed;
+        inset: 0;
+    }
 
-	dialog[open] {
-		animation: zoom 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-	}
+    dialog[open] {
+        animation: zoom 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
 
-	@keyframes zoom {
-		from {
-			transform: scale(0.95);
-			opacity: 0;
-		}
-		to {
-			transform: scale(1);
-			opacity: 1;
-		}
-	}
+    @keyframes zoom {
+        from {
+            transform: scale(0.95);
+            opacity: 0;
+        }
+        to {
+            transform: scale(1);
+            opacity: 1;
+        }
+    }
 </style>

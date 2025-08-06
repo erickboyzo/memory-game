@@ -49,6 +49,7 @@
 			result: {
 				time: $gameTimer.seconds,
 				winningPlayer,
+				players:[...$gameState.players].sort((a, b) => b.score - a.score),
 				multiPlayer: $gameState.players.length > 1
 			}
 		});

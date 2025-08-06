@@ -40,6 +40,7 @@ declare global {
 		time: number;
 		winningPlayer: Player;
 		multiPlayer: boolean;
+		players: Player[];
 	}
 
 	interface WinnerDialogProps {
