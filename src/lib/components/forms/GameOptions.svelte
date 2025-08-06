@@ -1,6 +1,8 @@
 <script lang="ts">
-	import { selectedTheme, numberOfPlayers, gridSize, SelectionButton, Button, gameInProgress } from '$lib';
-	import { goto } from '$app/navigation';
+	import { Button, gameState, SelectionButton } from '$lib';
+	import { updateGameState } from '$lib/stores/game-state-store';
+
+	let { onStart = () => {} } = $props();
 
 	const themeOptions = [
 		{ value: 'numbers', label: 'Numbers', icon: '🔢' },
@@ -11,25 +13,26 @@
 
 	const gridOptions = [4, 6];
 
-	const isPrimary = true;
-
 	const changeTheme = (theme: string) => {
-		selectedTheme.set(theme);
+		updateGameState({ selectedTheme: theme });
 	};
 
-	function startGame() {
-		gameInProgress.set(true);
-		goto('/game-in-progress');
+	function updateNumberOfPlayers(players: number) {
+		updateGameState({ numberOfPlayers: players });
+	}
+
+	function updateGridSize(size: number) {
+		updateGameState({ gridSize: size });
 	}
 </script>
 
 <h2 class="text-1xl mb-4 font-semibold text-gray-400">Select Theme</h2>
 <div class="grid grid-cols-12 gap-4">
-	{#each themeOptions as option}
+	{#each themeOptions as option (option.value)}
 		<div class="col-span-6">
 			<SelectionButton
 				className="w-full"
-				selected={$selectedTheme === option.value}
+				selected={$gameState.selectedTheme === option.value}
 				onclick={() => changeTheme(option.value)}
 			>
 				{option.label}
@@ -40,12 +43,12 @@
 
 <h2 class="text-1xl my-4 font-semibold text-gray-400">Number of Players</h2>
 <div class="grid grid-cols-12 gap-4">
-	{#each playerOptions as option}
+	{#each playerOptions as option (option)}
 		<div class="col-span-3">
 			<SelectionButton
 				className="w-full"
-				selected={$numberOfPlayers === option}
-				onclick={() => numberOfPlayers.set(option)}
+				selected={$gameState.numberOfPlayers === option}
+				onclick={() => updateNumberOfPlayers(option)}
 			>
 				{option}
 			</SelectionButton>
@@ -55,12 +58,12 @@
 
 <h2 class="text-1xl my-4 font-semibold text-gray-400">Grid Size</h2>
 <div class="grid grid-cols-12 gap-4">
-	{#each gridOptions as option}
+	{#each gridOptions as option (option)}
 		<div class="col-span-6">
 			<SelectionButton
 				className="w-full"
-				selected={$gridSize === option}
-				onclick={() => gridSize.set(option)}
+				selected={$gameState.gridSize === option}
+				onclick={() => updateGridSize(option)}
 			>
 				{option} x {option}
 			</SelectionButton>
@@ -68,4 +71,4 @@
 	{/each}
 </div>
 
-<Button primary={isPrimary} onclick={startGame} className="w-full mt-8">Start Game</Button>
+<Button primary={true} onclick={onStart} className="w-full mt-8">Start Game</Button>

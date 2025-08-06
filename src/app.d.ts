@@ -8,6 +8,47 @@ declare global {
 		// interface PageState {}
 		// interface Platform {}
 	}
+
+	interface GameState {
+		gameInProgress: boolean;
+		selectedTheme: string;
+		gridSize: number;
+		players: Player[];
+		numberOfPlayers: number;
+		currentPlayerIndex: number;
+		gameBoard?: GameCard[][];
+	}
+
+	interface Player {
+		name: string;
+		score: number;
+		moves: number;
+	}
+
+	interface GameCard {
+		id: number;
+		value: string;
+		isFlipped: boolean;
+		isMatched: boolean;
+	}
+
+	interface GameBoard {
+		cards: GameCard[];
+	}
+
+	interface GameResult {
+		time: number;
+		winningPlayer: Player;
+		multiPlayer: boolean;
+	}
+
+	interface WinnerDialogProps {
+		result: {
+			time: number;
+			moves: number;
+			playerName: string;
+		};
+	}
 }
 
 export {};
