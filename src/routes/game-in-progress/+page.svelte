@@ -39,8 +39,11 @@
 		);
 	}
 
-	function getWinner(players: Player[]): Player {
-		return _.maxBy(players, 'score')!;
+	function getWinner(players: Player[]): Player | null {
+		const maxScore = _.maxBy(players, 'score')!.score;
+		const playersWithMaxScore = _.filter(players, (p) => p.score === maxScore);
+
+		return playersWithMaxScore.length === 1 ? playersWithMaxScore[0] : null;
 	}
 
 	function showWinnerDialog(): void {
@@ -49,7 +52,7 @@
 			result: {
 				time: $gameTimer.seconds,
 				winningPlayer,
-				players:[...$gameState.players].sort((a, b) => b.score - a.score),
+				players: [...$gameState.players].sort((a, b) => b.score - a.score),
 				multiPlayer: $gameState.players.length > 1
 			}
 		});

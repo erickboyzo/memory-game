@@ -6,6 +6,7 @@
 		className = '',
 		card,
 		theme,
+		disableClick = false,
 		onCardClick = (() => {}) as MouseEventHandler<HTMLDivElement>
 	} = $props();
 
@@ -40,7 +41,7 @@
 	});
 </script>
 
-<div class="aspect-square h-20 w-20 sm:h-24 sm:w-24 md:h-28 md:w-28 lg:h-29 lg:w-29">
+<div class="aspect-square h-20 w-20 sm:h-24 sm:w-24 md:h-28 md:w-28 lg:h-29 lg:w-29 {disableClick ? 'pointer-events-none' : ''}" >
 	<div
 		role="button"
 		tabindex="0"
@@ -52,7 +53,7 @@
 	>
 		<!-- Back of card -->
 		<div
-			class="absolute inset-0 flex items-center justify-center rounded-full border border-gray-300 bg-gray-800 p-4 shadow-md [backface-visibility:hidden]"
+			class="absolute inset-0 flex items-center justify-center rounded-full border border-gray-300 bg-gray-800 p-4 shadow-md [backface-visibility:hidden] cursor-pointer"
 		></div>
 
 		<!-- Front of card -->

@@ -4,6 +4,7 @@
 
 	let { gameBoard = $bindable(), updateMoves = () => {}, updateScore = () => {} } = $props();
 	let flippedCards: GameCard[] = [];
+	let disableClick = $state(false);
 
 	function handleCardClick(card: GameCard, rowIndex: number, colIndex: number) {
 		console.log('Card clicked:', card, rowIndex, colIndex);
@@ -12,18 +13,21 @@
 		if (flippedCards.length === 0) {
 			flippedCards.push(card);
 		} else {
-			if (flippedCards[0].value === card.value) {
+			disableClick = true;
+			 if (flippedCards[0].value === card.value) {
 				card.isMatched = true;
 				flippedCards[0].isMatched = true;
 				flippedCards = [];
 				updateScore();
 				updateGameState({ gameBoard: gameBoard });
+				disableClick = false;
 			} else {
 				setTimeout(() => {
 					updateMoves();
 					flippedCards[0].isFlipped = false;
 					card.isFlipped = false;
 					flippedCards = [];
+					disableClick = false;
 				}, 1000);
 			}
 		}
@@ -37,6 +41,7 @@
 				{#each row as card, colIndex (card.id)}
 					<GameBoardCard
 						{card}
+						disableClick={disableClick}
 						theme={$gameState.selectedTheme}
 						onCardClick={() => handleCardClick(card, rowIndex, colIndex)}
 					/>

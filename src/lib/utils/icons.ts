@@ -133,7 +133,6 @@ export const fontAwesomeFreeIcons = [
 	'fa-store',
 	'fa-warehouse',
 	'fa-factory',
-	'fa-castle',
 	'fa-monument',
 	'fa-bridge',
 

@@ -17,7 +17,7 @@
 </script>
 
 <div class="flex h-screen flex-col" class:bg-gray-800={!$gameState.gameInProgress}>
-	<header class="px-6 pt-4 md:pb-0 pb-4 text-white">
+	<header class="px-6 pt-4 pb-4 text-white md:pb-0">
 		{#if $gameState.gameInProgress}
 			<div class="flex w-full items-center">
 				<h1 class="ml-6 text-3xl font-bold text-gray-800 md:w-6/12 md:text-4xl lg:w-9/12">
