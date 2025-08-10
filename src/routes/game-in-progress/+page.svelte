@@ -2,6 +2,7 @@
 	import { gameState, updateGameState } from '$lib/stores/game-state-store';
 	import {
 		createGameBoardWithCards,
+		dialogIds,
 		GameBoard,
 		gameEvents,
 		GameScore,
@@ -48,7 +49,7 @@
 
 	function showWinnerDialog(): void {
 		const winningPlayer = getWinner($gameState.players);
-		dialogManager.show('winner', WinnerDialog, {
+		dialogManager.showDialog(dialogIds.WINNER_DIALOG, WinnerDialog, {
 			result: {
 				time: $gameTimer.seconds,
 				winningPlayer,
@@ -69,6 +70,10 @@
 				return { score: 0, name: 'Player ' + (index + 1), moves: 0 };
 			})
 		});
+		if ($gameState.players.length === 1) {
+			gameTimer.reset();
+			gameTimer.start();
+		}
 		gameEvents.resume();
 	}
 
@@ -93,8 +98,8 @@
 		{#if gameBoard}
 			{#if $gameState.players.length > 1}
 				<MultiPlayerScoreboard players={$gameState.players} currentPlayerId={currentPlayerIndex} />
-			{:else}
-				<GameScore moves={$gameState.players[0].moves} />
+			{:else if $gameState.players.length === 1}
+				<GameScore moves={$gameState?.players[0]?.moves} />
 			{/if}
 		{/if}
 	</div>

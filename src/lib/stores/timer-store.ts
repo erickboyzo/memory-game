@@ -99,7 +99,6 @@ function createTimer() {
 				cancelAnimationFrame(currentState.animationFrameId);
 			}
 			store.update((s) => ({ ...s, isRunning: false }));
-			// Force a final save when stopping
 			saveToStorage.flush();
 		},
 
@@ -118,8 +117,23 @@ function createTimer() {
 			saveToStorage.cancel();
 		},
 
-		setSeconds: (seconds: number) => {
-			store.update((s) => ({ ...s, seconds }));
+		pause: () => {
+			if (currentState?.animationFrameId) {
+				cancelAnimationFrame(currentState.animationFrameId);
+			}
+			store.update((s) => ({ ...s, isRunning: false }));
+			saveToStorage.flush();
+		},
+
+		resume: () => {
+			initializeSubscription();
+			store.update((s) => ({
+				...s,
+				isRunning: true,
+				// Resume from the current seconds count
+				startTime: performance.now() - s.seconds * 1000
+			}));
+			tick();
 		}
 	};
 

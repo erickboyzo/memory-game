@@ -1,7 +1,7 @@
 <script lang="ts">
 	import '../app.css';
 	import { gameState, updateGameState } from '$lib/stores/game-state-store';
-	import { Button, gameEvents } from '$lib';
+	import { Button, dialogIds, dialogManager, gameEvents, gameTimer, MenuDialog } from '$lib';
 	import { goto } from '$app/navigation';
 
 	let { children } = $props();
@@ -14,12 +14,30 @@
 		updateGameState({ gameInProgress: false, players: [], currentPlayerIndex: 0 });
 		goto('/');
 	}
+
+	function showMenu() {
+		gameTimer.pause();
+		dialogManager.showDialog(dialogIds.MENU_DIALOG, MenuDialog, {
+			close: () => {
+				dialogManager.close(dialogIds.MENU_DIALOG);
+				gameTimer.resume();
+			},
+			onRestart: () => {
+				restartGame();
+				dialogManager.close(dialogIds.MENU_DIALOG);
+			},
+			onNewGame: () => {
+				selectNewGame();
+				dialogManager.close(dialogIds.MENU_DIALOG);
+			}
+		});
+	}
 </script>
 
 <div class="flex h-screen flex-col" class:bg-gray-800={!$gameState.gameInProgress}>
 	<header class="px-6 pt-4 pb-4 text-white md:pb-0">
 		{#if $gameState.gameInProgress}
-			<div class="flex w-full items-center">
+			<div class="flex w-full items-center justify-between">
 				<h1 class="ml-6 text-3xl font-bold text-gray-800 md:w-6/12 md:text-4xl lg:w-9/12">
 					memory
 				</h1>
@@ -28,7 +46,7 @@
 					<Button onclick={selectNewGame}>New Game</Button>
 				</div>
 				<div class="flex gap-2 md:hidden">
-					<Button>Menu</Button>
+					<Button onclick={showMenu}>Menu</Button>
 				</div>
 			</div>
 		{:else}

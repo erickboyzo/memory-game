@@ -10,7 +10,6 @@ function createPersistedStore<T>(key: string, initialValue: T) {
 	function saveToStorage(value: T) {
 		if (browser) {
 			try {
-				console.log('saving to storage', value);
 				localStorage.setItem(key, JSON.stringify(value));
 			} catch (error) {
 				console.error(`Error saving to storage for key ${key}:`, error);
@@ -21,7 +20,6 @@ function createPersistedStore<T>(key: string, initialValue: T) {
 	return {
 		subscribe: store.subscribe,
 		set: (value: T) => {
-			console.log('Game State Store Setting data', value);
 			saveToStorage(value);
 			store.set(value);
 		},

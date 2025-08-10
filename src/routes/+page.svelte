@@ -1,5 +1,12 @@
 <script>
-	import { Card, createGameBoardWithCards, GameOptions, updateGameState, gameState } from '$lib';
+	import {
+		Card,
+		createGameBoardWithCards,
+		GameOptions,
+		updateGameState,
+		gameState,
+		gameTimer
+	} from '$lib';
 	import { goto } from '$app/navigation';
 
 	function startGame() {
@@ -17,6 +24,10 @@
 				return { score: 0, name: 'Player ' + (index + 1), moves: 0 };
 			})
 		});
+		if ($gameState.players.length === 1) {
+			gameTimer.reset();
+			gameTimer.start();
+		}
 	}
 </script>
 
