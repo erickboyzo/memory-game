@@ -51,6 +51,5 @@ npm run format     # Format code
 
 ## Acknowledgments
 
-- Challenge by [Frontend Mentor](https://www.frontendmentor.io/challenges/memory-game-vse4WFPvM)
-- Project inspired by Frontend Mentor's Memory Game Challenge
+- Project inspired by [Frontend Mentor's](https://www.frontendmentor.io/challenges/memory-game-vse4WFPvM) Memory Game Challenge
 - Icons provided by FontAwesome
