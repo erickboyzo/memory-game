@@ -2,6 +2,9 @@
 
 A classic memory card matching game built with SvelteKit and modern web technologies.
 
+## Demo
+**Live Demo**: [Memory Game](https://memory-game-bqk.pages.dev/)
+
 ## Game Rules
 
 **Objective:** Match all pairs of cards in the fewest moves possible.
