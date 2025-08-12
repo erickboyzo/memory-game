@@ -12,16 +12,23 @@
 	} from '$lib';
 	import { dialogManager } from '$lib/utils/dialog-manager';
 	import _ from 'lodash';
+	import { goto } from '$app/navigation';
 
 	let gameBoard = $state($gameState.gameBoard);
 	let currentPlayerIndex = $state($gameState.currentPlayerIndex ?? 0);
 
 	function updatePlayerMoves(): void {
+		if (checkForWinner($gameState.gameBoard as GameCard[][])) {
+			showWinnerDialog();
+		}
 		$gameState.players[currentPlayerIndex].moves++;
 		moveToNextPlayer();
 	}
 
 	function updatePlayerScore(): void {
+		if (checkForWinner($gameState.gameBoard as GameCard[][])) {
+			showWinnerDialog();
+		}
 		$gameState.players[currentPlayerIndex].score++;
 		moveToNextPlayer();
 	}
@@ -35,12 +42,14 @@
 	}
 
 	function checkForWinner(board: GameCard[][]): boolean {
+		if (!board) return false;
 		return board.every((card) =>
 			card.every((gameCard) => gameCard.isMatched && gameCard.isFlipped)
 		);
 	}
 
 	function getWinner(players: Player[]): Player | null {
+		if (!players || players.length === 0) return null;
 		const maxScore = _.maxBy(players, 'score')!.score;
 		const playersWithMaxScore = _.filter(players, (p) => p.score === maxScore);
 
@@ -48,21 +57,36 @@
 	}
 
 	function showWinnerDialog(): void {
-		const winningPlayer = getWinner($gameState.players);
+		gameTimer.stop();
+		gameEvents.pause();
+		const result = {
+			time: $gameTimer.seconds,
+			winningPlayer: getWinner($gameState.players),
+			players: [...$gameState.players].sort((a, b) => b.score - a.score),
+			multiPlayer: $gameState.players.length > 1
+		};
+
 		dialogManager.showDialog(dialogIds.WINNER_DIALOG, WinnerDialog, {
-			result: {
-				time: $gameTimer.seconds,
-				winningPlayer,
-				players: [...$gameState.players].sort((a, b) => b.score - a.score),
-				multiPlayer: $gameState.players.length > 1
+			result,
+			onResetGame() {
+				gameEvents.restart();
+				dialogManager.close(dialogIds.WINNER_DIALOG);
+			},
+			onNewGame() {
+				updateGameState({
+					gameInProgress: false,
+					players: [],
+					currentPlayerIndex: 0
+				});
+				dialogManager.close(dialogIds.WINNER_DIALOG);
+				goto('/');
 			}
 		});
 	}
 
 	function resetGame() {
 		const newGameBoard = createGameBoardWithCards($gameState.gridSize, $gameState.selectedTheme);
-		gameBoard = newGameBoard;
-		currentPlayerIndex = 0;
+
 		updateGameState({
 			gameBoard: newGameBoard,
 			currentPlayerIndex: 0,
@@ -70,20 +94,16 @@
 				return { score: 0, name: 'Player ' + (index + 1), moves: 0 };
 			})
 		});
+
+		gameBoard = newGameBoard;
+		currentPlayerIndex = 0;
+
 		if ($gameState.players.length === 1) {
 			gameTimer.reset();
 			gameTimer.start();
 		}
 		gameEvents.resume();
 	}
-
-	$effect(() => {
-		const gameBoard = $gameState.gameBoard ?? [];
-		if (checkForWinner(gameBoard)) {
-			gameTimer.stop();
-			showWinnerDialog();
-		}
-	});
 
 	$effect(() => {
 		if ($gameEvents?.type === 'restart') {

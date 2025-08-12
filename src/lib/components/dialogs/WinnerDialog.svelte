@@ -1,9 +1,9 @@
 <script lang="ts">
-	import { gameEvents } from '$lib/stores/game-events-store';
-	import { BaseDialog, Button, dialogIds, dialogManager, updateGameState } from '$lib';
-	import { goto } from '$app/navigation';
+	import { BaseDialog, Button } from '$lib';
 
 	export let result: GameResult;
+	export let onResetGame = () => {};
+	export let onNewGame = () => {};
 
 	$: formattedTime = formatTime(result.time);
 
@@ -14,18 +14,11 @@
 	}
 
 	function handleRestart() {
-		gameEvents.restart();
-		closeDialog();
+		onResetGame();
 	}
 
 	function selectNewGame() {
-		updateGameState({ gameInProgress: false, players: [], currentPlayerIndex: 0 });
-		closeDialog();
-		goto('/');
-	}
-
-	function closeDialog() {
-		dialogManager.close(dialogIds.WINNER_DIALOG);
+		onNewGame();
 	}
 </script>
 
