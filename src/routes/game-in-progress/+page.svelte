@@ -13,24 +13,27 @@
 	import { dialogManager } from '$lib/utils/dialog-manager';
 	import _ from 'lodash';
 	import { goto } from '$app/navigation';
+	import { onMount } from 'svelte';
 
 	let gameBoard = $state($gameState.gameBoard);
 	let currentPlayerIndex = $state($gameState.currentPlayerIndex ?? 0);
 
 	function updatePlayerMoves(): void {
-		if (checkForWinner($gameState.gameBoard as GameCard[][])) {
-			showWinnerDialog();
-		}
+		checkForWinner();
 		$gameState.players[currentPlayerIndex].moves++;
 		moveToNextPlayer();
 	}
 
 	function updatePlayerScore(): void {
-		if (checkForWinner($gameState.gameBoard as GameCard[][])) {
-			showWinnerDialog();
-		}
+		checkForWinner();
 		$gameState.players[currentPlayerIndex].score++;
 		moveToNextPlayer();
+	}
+
+	function checkForWinner() {
+		if (isGameOver($gameState.gameBoard as GameCard[][])) {
+			showWinnerDialog();
+		}
 	}
 
 	function moveToNextPlayer(): void {
@@ -41,7 +44,7 @@
 		updateGameState({ currentPlayerIndex });
 	}
 
-	function checkForWinner(board: GameCard[][]): boolean {
+	function isGameOver(board: GameCard[][]): boolean {
 		if (!board) return false;
 		return board.every((card) =>
 			card.every((gameCard) => gameCard.isMatched && gameCard.isFlipped)
@@ -104,6 +107,10 @@
 		}
 		gameEvents.resume();
 	}
+	onMount(() => {
+		// handles on page refresh
+		checkForWinner();
+	});
 
 	$effect(() => {
 		if ($gameEvents?.type === 'restart') {
